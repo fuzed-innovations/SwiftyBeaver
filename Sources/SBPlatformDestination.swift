@@ -43,7 +43,7 @@ public class SBPlatformDestination: BaseDestination {
     public var appSecret = ""
     public var encryptionKey = ""
     public var analyticsUserName = "" // user email, ID, name, etc.
-    public var analyticsUUID: String { return uuid }
+    public var analyticsUUID: String { return uuidOverride ?? uuid }
 
     // when to send to server
     public struct SendingPoints {
@@ -70,6 +70,7 @@ public class SBPlatformDestination: BaseDestination {
 
     // analytics
     var uuid = ""
+    public var uuidOverride: String? = nil
 
     // destination
     override public var defaultHashValue: Int {return 3}
@@ -489,7 +490,7 @@ public class SBPlatformDestination: BaseDestination {
         var dict = [String: Any]()
         let now = NSDate().timeIntervalSince1970
 
-        uuid =  NSUUID().uuidString
+        uuid = uuidOverride ?? NSUUID().uuidString
         dict["uuid"] = uuid
         dict["firstStart"] = now
         dict["lastStart"] = now
@@ -518,7 +519,7 @@ public class SBPlatformDestination: BaseDestination {
                     dict["starts"] = val
                 }
             }
-            if let val = loadedDict["uuid"] as? String {
+            if let val = uuidOverride ?? (loadedDict["uuid"] as? String) {
                 dict["uuid"] = val
                 uuid = val
             }
